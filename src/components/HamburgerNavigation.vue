@@ -120,7 +120,7 @@ export default {
       this.menuExpanded = !this.menuExpanded;
     },
   },
-}
+};
 </script>
 
 <style lang="scss">

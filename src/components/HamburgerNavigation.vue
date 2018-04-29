@@ -20,6 +20,7 @@
                   :href="item.url"
                   target="_blank"
                 >
+                  <span>{{ item.label }}</span>
                   <font-awesome-icon
                     :icon="item.icon"
                     size="3x"
@@ -54,6 +55,7 @@
       <div
         v-if="menuExpanded"
         class="overlay"
+        @click.stop.prevent="toggleMenu"
       />
     </transition>
   </div>
@@ -126,6 +128,8 @@ export default {
 <style lang="scss">
 $purple: rgb(58, 23, 76); //#3a174c
 $icon-color: rgb(255, 255, 255); //#ffffff
+$nav-item-radius: 50px;
+$tooltip-height: 32px;
 
 /**
  * Nav Menu Styles
@@ -143,11 +147,11 @@ nav {
     border-radius: 50%;
     color: $icon-color;
     cursor: pointer;
-    height: 50px;
+    height: $nav-item-radius;
     margin-top: 5px;
     margin-bottom: 0;
     position: relative;
-    width: 50px;
+    width: $nav-item-radius;
 
     &.nav-item--toggle {
       z-index: 9999;
@@ -155,12 +159,49 @@ nav {
 
     svg {
       display: block;
-      height: 50px;
+      height: $nav-item-radius;
       margin: 0 auto;
     }
 
     a, a:link, a:visited, a:hover, a:active {
       color: $icon-color;
+      display: block;
+      font-family: 'Playfair Display', serif;
+      position: relative;
+
+      span {
+        background-color: $purple;
+        border-radius: ($tooltip-height / 8);
+        font-size: 1.2em;
+        height: $tooltip-height;
+        line-height: $tooltip-height;
+        margin-right: $nav-item-radius + ($tooltip-height / 4) + 5px;
+        margin-top: ($tooltip-height / 4);
+        opacity: 0;
+        padding: 0 ($tooltip-height / 4);
+        position: absolute;
+        right: 0;
+        top: 0;
+        text-align: right;
+        transition: opacity .3s ease-in-out;
+
+        // 16px tall arrow
+        &:before {
+          border-top: ($tooltip-height / 4) solid transparent;
+          border-bottom: ($tooltip-height / 4) solid transparent;
+          border-left: ($tooltip-height / 4) solid $purple;
+          content: '';
+          height: 0;
+          position: absolute;
+          right: -($tooltip-height / 4);
+          top: ($tooltip-height / 4);
+          width: 0;
+        }
+      }
+    }
+
+    a:hover span {
+      opacity: 1;
     }
   }
 }
@@ -225,7 +266,7 @@ nav {
 }
 @keyframes fan-out {
   0% {
-    margin-top: -50px;
+    margin-top: -($nav-item-radius);
   }
   100% {
     margin-top: 5px;
@@ -240,7 +281,7 @@ nav {
     margin-top: 5px;
   }
   100% {
-    margin-top: -50px;
+    margin-top: -($nav-item-radius);
   }
 }
 
@@ -249,7 +290,7 @@ nav {
 }
 @keyframes menu-expand {
   0% {
-    margin-bottom: -55px;
+    margin-bottom: -($nav-item-radius + 5);
   }
   100% {
     margin-bottom: 0;
@@ -264,7 +305,7 @@ nav {
     margin-bottom: 0px;
   }
   100% {
-    margin-bottom: -55px;
+    margin-bottom: -($nav-item-radius + 5);
   }
 }
 
